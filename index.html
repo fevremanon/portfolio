@@ -237,6 +237,8 @@ figcaption { font-size: 15px; color: var(--gris); font-weight: 600; }
 footer { padding-block: var(--e4) var(--e3); }
 footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--e2); font-size: 15px; color: var(--gris); border-top: 2px solid var(--carte); padding-top: var(--e3); }
 
+a.ccard { text-decoration: none; }
+
 .lb { position: fixed; inset: 0; background: rgba(15,13,19,.92); display: grid; place-items: center; z-index: 70; padding: var(--e2); cursor: zoom-out; animation: fadeIn .25s ease both; }
 .lb img { max-height: 92vh; width: auto; border-radius: 18px; animation: rise .5s var(--spring) both; }
 
@@ -419,8 +421,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         </div>
       </div>
       <div class="contact">
-        <div class="ccard"><span class="ccard__ic" aria-hidden="true">@</span><h3>Mail</h3><p class="muted">À ajouter</p></div>
-        <div class="ccard"><span class="ccard__ic" aria-hidden="true">in</span><h3>LinkedIn</h3><p class="muted">À ajouter</p></div>
+        <a class="ccard" href="mailto:manonfevre@icloud.com"><span class="ccard__ic" aria-hidden="true">@</span><h3>Mail</h3><p class="muted">manonfevre@icloud.com</p></a>
+        <a class="ccard" href="https://www.linkedin.com/in/manon-f-974140279/" target="_blank" rel="noopener"><span class="ccard__ic" aria-hidden="true">in</span><h3>LinkedIn</h3><p class="muted">Manon Fèvre</p></a>
         <div class="ccard"><span class="ccard__ic" aria-hidden="true">ig</span><h3>Instagram</h3><p class="muted">À ajouter</p></div>
         <div class="ccard"><span class="ccard__ic" aria-hidden="true">◎</span><h3>Lieu de travail</h3><p class="muted">Cinéma Étoile Cosmos<br>22 avenue de la Résistance, 77500 Chelles</p></div>
       </div>
