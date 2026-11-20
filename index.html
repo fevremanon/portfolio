@@ -147,6 +147,11 @@ p { margin: 0; max-width: 65ch; }
 .modal__close:hover { transform: rotate(90deg); background: var(--noir); color: #fff; }
 .modal__body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: var(--e3); align-items: start; }
 .modal__body img, .modal__body .ph-box { border-radius: var(--r-m); width: 100%; }
+.modal__body > img { cursor: zoom-in; }
+.gal { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.gal figure { margin: 0; display: grid; gap: 8px; }
+.gal img { width: 100%; border-radius: 14px; cursor: zoom-in; transition: transform .45s var(--spring); }
+.gal img:hover { transform: translateY(-4px) scale(1.02); }
 .ph-box { aspect-ratio: 4 / 5; background: var(--carte); }
 
 /* page projet */
@@ -511,9 +516,9 @@ const PROD = [
     d: "Stratégie de communication de l'avant-première du film de Martin Jauvat : affiche, déclinaisons digitales et réseaux sociaux.", comp: ["C1", "C2", "C3"] },
   { t: "Nuit de l'Horreur · 31 octobre", a: "Cinéma Étoile Cosmos", ctx: "entreprise", part: "Avec plusieurs distributeurs", c: "Vécue", team: "Projet seul", proj: "nuit-horreur",
     d: "Marathon horreur de 21h à 7h : programmation, négociation des droits avec les distributeurs et campagne de communication complète.", comp: ["C1", "C2", "C3", "C4", "C5"] },
-  { t: "Soirée Beaujolais Nouveau · Premiers Crus", a: "Cinéma Étoile Cosmos", ctx: "entreprise", part: "Avec la boulangerie du Parc et Cep & Malt", img: "img/beaujolais-affiche.jpg", c: "Vécue", team: "Projet seul",
+  { t: "Soirée Beaujolais Nouveau · Premiers Crus", a: "Cinéma Étoile Cosmos", ctx: "entreprise", part: "Avec la boulangerie du Parc et Cep & Malt", img: "img/beaujolais-affiche.jpg", gallery: [["img/beaujolais-carton-flat.jpg", "Carton de pré-séance · flat"]], c: "Vécue", team: "Projet seul",
     d: "Soirée spéciale du 20 novembre autour du film de Jérôme Le Maire, avec repas et Beaujolais Nouveau. Affiche et cartons de pré-séance flat et scope, dans un univers bordeaux et gravures de vigne.", comp: ["C2", "C3"] },
-  { t: "Festival de Cannes · cérémonie d'ouverture en direct", a: "Cinéma Étoile Cosmos", ctx: "entreprise", part: "Retransmission avec Deluxe", img: "img/cannes-affiche.jpg", c: "Vécue", team: "Projet seul",
+  { t: "Festival de Cannes · cérémonie d'ouverture en direct", a: "Cinéma Étoile Cosmos", ctx: "entreprise", part: "Retransmission avec Deluxe", img: "img/cannes-affiche.jpg", gallery: [["img/cannes-carton-flat.jpg", "Carton de pré-séance · flat"], ["img/cannes-carton-scope.jpg", "Carton de pré-séance · scope"]], c: "Vécue", team: "Projet seul",
     d: "Retransmission en direct de la cérémonie d'ouverture du 79e Festival de Cannes, le 12 mai 2026, avec La Vénus électrique. Affiche A2 Art déco, cartons de pré-séance flat et scope.", comp: ["C2", "C3"] },
   { t: "Opéras · retransmissions", a: "Cinéma Étoile Cosmos", ctx: "entreprise", part: "Avec Pathé Live · Metropolitan Opera", c: "Vécue", team: "Projet seul",
     d: "Communication des retransmissions d'opéras au Cosmos. Description à compléter.", comp: ["C2", "C3"] },
@@ -607,13 +612,15 @@ function openProd(i) {
     <div class="modal__head"><div class="stack" style="gap:8px"><p class="kicker">${p.a}${p.part ? ` · ${p.part}` : ""}</p><h3 id="m-title">${p.t}</h3><div class="tags"><span class="tag">${p.c}</span><span class="tag">${p.team}</span></div></div>
       <button type="button" class="modal__close" aria-label="Fermer">✕</button></div>
     <div class="modal__body">
-      ${p.img ? `<img src="${p.img}" alt="${p.t}">` : `<div class="ph-box"><div class="ph"><div><b>${p.a}</b><span>Visuel à ajouter</span></div></div></div>`}
+      ${p.img ? `<img class="zoom" src="${p.img}" alt="${p.t}">` : `<div class="ph-box"><div class="ph"><div><b>${p.a}</b><span>Visuel à ajouter</span></div></div></div>`}
       <div class="stack">
         <p style="font-size:19px">${p.d}</p>
         <div class="tags">${p.comp.map(c => `<span class="tag tag--v">${c} ${COMP[c]}</span>`).join("")}</div>
         ${p.proj ? `<a class="btn" href="#projet-${p.proj}" style="justify-self:start">Voir le projet complet →</a>` : ""}
       </div>
-    </div></div>`;
+    </div>
+    ${p.gallery ? `<div class="stack"><p class="sublbl">Déclinaisons</p><div class="gal">${p.gallery.map(([src, l]) => `<figure><img class="zoom" src="${src}" alt="${p.t} : ${l}"><figcaption>${l}</figcaption></figure>`).join("")}</div></div>` : ""}
+    </div>`;
   modal.hidden = false;
   modal.querySelector(".modal__close").focus();
 }
