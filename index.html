@@ -250,6 +250,27 @@ a.ccard { text-decoration: none; }
 .view { animation: viewIn .6s var(--soft) both; }
 @keyframes viewIn { from { transform: translateY(18px); } }
 
+/* ajouts dossier bloc 2 */
+.af { display: inline; padding: 2px 8px; border-radius: 8px; background: #fff1b8; color: #6b4e00; font-weight: 700; font-size: .92em; }
+.af-s { color: #8a6400; }
+.kv { display: grid; grid-template-columns: minmax(140px, 200px) minmax(0, 1fr); gap: 10px 20px; margin: 0; font-size: 17px; }
+.kv dt { font-weight: 800; color: var(--gris); }
+.kv dd { margin: 0; }
+.pb { display: grid; gap: 4px; max-width: 75ch; padding: 16px 18px; border-radius: var(--r-m); background: #fff; }
+.tblw { overflow-x: auto; border-radius: var(--r-m); background: #fff; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 16px; }
+.tbl th, .tbl td { text-align: left; padding: 12px 16px; vertical-align: top; border-bottom: 1px solid var(--carte); }
+.tbl th { font-weight: 800; color: var(--gris); font-size: 14px; background: var(--carte-2); }
+.tbl tr:last-child td { border-bottom: 0; }
+.tbl a { color: var(--violet); font-weight: 700; }
+.acts { display: grid; gap: 8px; }
+.act { display: flex; gap: 12px; align-items: center; padding: 10px 14px; border-radius: var(--r-m); background: #fff; color: var(--gris); font-size: 16px; opacity: .55; }
+.act b { width: 32px; height: 32px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--carte-2); color: var(--noir); }
+.act.on { opacity: 1; color: var(--noir); font-weight: 700; }
+.act.on b { background: var(--violet); color: #fff; }
+a.annexe { text-decoration: none; }
+@media (max-width: 640px) { .nav__pill { display: none; } .nav ul a[aria-current="page"] { background: var(--noir); } .kv { grid-template-columns: minmax(0, 1fr); gap: 2px 0; } .kv dd { margin-bottom: 10px; } }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   html { scroll-behavior: auto; }
@@ -317,9 +338,9 @@ a.ccard { text-decoration: none; }
       <div class="head-row">
         <div class="stack" style="gap:10px">
           <p class="kicker">Les projets</p>
-          <h2>3 projets en entier</h2>
+          <h2>3 projets complets</h2>
         </div>
-        <p class="note">Sélection provisoire : les trois projets définitifs restent à choisir.</p>
+        <p class="note">Pour chaque projet : brief, veille, stratégie, planning, coûts, évaluation, fiche descriptive et annexes.</p>
       </div>
       <div class="projets" id="projets"></div>
 
@@ -471,37 +492,167 @@ const COMP_LONG = {
 };
 
 /* ---------- Projets (pages complètes) ---------- */
+/* AF("...") affiche un encadré jaune « À compléter » : à remplacer par le vrai contenu avant l'oral. */
+const AF = t => `<span class="af">À compléter · ${t}</span>`;
+
 const PROJ = [
-  { id: "japanim", n: "01", t: "Jap'Anim Club", sub: "Refonte de l'identité et série d'affiches mensuelles",
-    img: "img/ja60-yakuza.jpg", a: "Cinéma Étoile Cosmos", periode: "Février 2025 – en cours", cond: "Vécue · projet seul",
+  { id: "japanim", n: "01", t: "Jap'Anim Club", sub: "Refonte de l'identité et relance du rendez-vous mensuel d'animation japonaise",
+    img: "img/ja60-yakuza.jpg", a: "Cinéma Étoile Cosmos", periode: "Février 2025 – en cours", cond: "Vécue · en autonomie · individuelle",
     comp: ["C1", "C2", "C3", "C4", "C5"],
-    contexte: "Le Jap'Anim Club propose chaque mois un film d'animation japonaise au Cosmos. Au départ, les séances attiraient très peu de monde. J'ai repris toute la communication du club pour le rendre reconnaissable d'un mois à l'autre et faire venir un public jeune.",
-    fiche: [["Annonceur", "Cinéma Étoile Cosmos, Chelles"], ["Partenaire", "Eurozoom (distributeur)"], ["Cible", "Fans d'animation japonaise, 15–30 ans"], ["Supports", "Affiches 120×160 et A3, cartons DCP, écrans DOOH, Instagram et Facebook"]],
+    contexte: "Le Jap'Anim Club propose chaque mois un film d'animation japonaise en VOSTFR, à 5 €, en partenariat avec la boutique Bulle de Jeux. Le club existait depuis juin 2021, mais sans identité stable et avec très peu d'entrées. J'ai repris toute sa communication pour le rendre reconnaissable d'un mois à l'autre et faire venir les 15-25 ans.",
+    fiche: [["Annonceur", "Cinéma Étoile Cosmos, Chelles (77)"], ["Partenaires", "Bulle de Jeux (boutique, Chelles) · distributeurs, dont Eurozoom · conservatoire de Chelles (#66)"], ["Cible", "15-25 ans, fans d'animation japonaise"], ["Supports", "Affiches 120×160 et A3, cartons DCP flat et scope, écrans DOOH, Instagram, Facebook, newsletter"]],
+    brief: [
+      ["Contexte", "Club créé en juin 2021 avec Bulle de Jeux. Identité visuelle incohérente, gestion qui changeait selon les équipes, communication peu adaptée aux jeunes. Le cinéma, classé Art et Essai (labels Jeune Public et Patrimoine & Mémoire), attire peu les 15-25 ans."],
+      ["Demande", "Refaire l'identité du club et sa communication pour attirer et fidéliser les 15-25 ans, sans compromettre l'identité Art et Essai du cinéma ni ses labels."],
+      ["Contraintes de contenu", "Séance en VOSTFR. Logos obligatoires : Cinéma Étoile Cosmos, Ville de Chelles, Bulle de Jeux et distributeur du film. Les visuels du film demandent l'accord du distributeur."],
+      ["Contraintes graphiques", "Une charte stable d'un mois à l'autre, déclinable du 120×160 au format story : affiche, A3, cartons flat et scope, écrans du hall, posts et stories."],
+      ["Budget", "Création graphique en interne. La DSP donne droit à 3 affiches 120×160 gratuites par mois, imprimées par la Ville. Quand il faut payer un imprimeur (#66), le plafond est de 200 € HT livraison comprise."],
+      ["Délais", "Une séance par mois, le vendredi à 18h30. Les affiches doivent être en ville trois semaines avant la séance."],
+    ],
+    problematique: "Comment attirer et fidéliser les 15-25 ans au Cinéma Étoile Cosmos sans compromettre son identité Art et Essai ni les labels qui garantissent ses subventions ?",
+    veille: [
+      ["Cible", "Les 15-25 ans réagissent aux formats courts et visuels (Reels, stories). Ils cherchent des expériences collectives et des communautés de passionnés, et l'animation japonaise est une niche très engagée."],
+      ["Concurrentielle", "Les grands circuits (CGR, UGC, MK2) captent les sorties d'animés. Le streaming concurrence la salle : le club doit vendre l'expérience collective et le grand écran."],
+      ["Économique", "Le nombre d'imprimeries est passé d'environ 6 300 en 2012 à 4 000, au profit de l'impression en ligne. Le prix du papier a augmenté de 8 à 10 % en Europe en avril 2026."],
+      ["Technique", "Le papier dos bleu résistant à l'humidité (REH) est le standard de l'affichage urbain. Les formats sont normés : 120×160 pour une sucette, 120×176 pour un abribus. L'impression numérique convient aux petites séries."],
+      ["Juridique", "L'affichage sauvage est puni d'une amende de 750 €, d'où l'usage des panneaux de la Ville. L'utilisation des visuels du film est soumise à l'accord du distributeur."],
+      ["Environnementale", "Le label Imprim'Vert contrôle 5 critères (déchets, liquides, produits toxiques, énergie, sensibilisation). Les papiers FSC ou PEFC garantissent une gestion responsable des forêts."],
+    ],
+    veilleApport: "La veille a orienté trois choix : une ligne graphique forte et sérielle pour créer un rendez-vous, des formats courts sur Instagram pour toucher la cible, et le choix d'Exaprint (moins cher, plus rapide, papier FSC) pour l'impression de la #66.",
+    sources: [
+      ["Exaprint, affiche dos bleu", "https://www.exaprint.fr/affichage-publicitaire/affiche/dos-bleu/", "Prix et délais d'impression"],
+      ["Ma Bonne Impression, affiche 120×160", "https://www.ma-bonne-impression.fr/affiche/affiche-mobilier-urbain/affiche-120x160-cm.html", "Prix d'un spécialiste cinéma"],
+      ["Annuaire 118712, imprimeurs à Noisiel", "https://www.118712.fr/annuaire/ville/noisiel-77/imprimeur", "Repérage d'un imprimeur local"],
+      ["Beninwebtv, les imprimeries en France", "https://beninwebtv.bj/imprimeries-en-france-le-nombre-passe-de-6-300-a-4-000/", "Évolution du marché de l'impression"],
+      ["Lesprom, hausse des prix d'Arctic Paper", "https://www.lesprom.ru/es/news/Arctic_Paper_to_increase_paper_prices_by_8%E2%80%9310_in_Europe_122276/", "Prix du papier"],
+      ["Ville de Petit-Quevilly, affichage sauvage", "https://petit-quevilly.fr/vivre-a-petit-quevilly/environnement/affichage-sauvage/pdf", "Cadre juridique de l'affichage"],
+      ["Imprimerie Centrale, label Imprim'Vert", "https://ic.lu/en/imprimvert-environment/", "Critères environnementaux"],
+    ],
+    mood: "Moodboard du club (affiches d'animés, ciné-clubs, codes graphiques japonais) et planche tendances print et Instagram : visuels à ajouter dans img/ puis ici.",
+    strat: {
+      cible: [["Cœur de cible", "15-25 ans : lycéens, étudiants, jeunes actifs de Chelles et des communes voisines"], ["Cible secondaire", "Adultes passionnés d'animation japonaise, déjà sensibles au cinéma Art et Essai"], ["Relais", "Bulle de Jeux, commerçants de Chelles, conservatoire (#66), distributeurs"]],
+      objectifs: [["Cognitif", "Faire connaître le club aux 15-25 ans de Chelles et des environs"], ["Affectif", "Moderniser l'image du cinéma Art et Essai auprès du jeune public"], ["Conatif", "Transformer les abonnés en spectateurs et créer un retour régulier, séance après séance. Pour la #66 : dépasser les 40 entrées de la meilleure séance récente."]],
+      axe: "Le rendez-vous mensuel de l'animation japonaise sur grand écran à Chelles : une expérience collective que le streaming ne peut pas offrir.",
+      ton: "Accessible, passionné, expert sans être élitiste.",
+      moyens: [
+        ["Print", "Affiches 120×160 sur les panneaux de la Ville", "Visibilité locale auprès des passants"],
+        ["Print", "Affiches A3 dans une vingtaine de commerces et sur l'affichage libre", "Relais de proximité"],
+        ["Print", "Encart dans le Chelles Mag", "Toucher les foyers"],
+        ["Cinéma", "Cartons de pré-séance flat et scope", "Capter les spectateurs déjà en salle"],
+        ["DOOH", "Écrans horizontaux et verticaux du hall", "Visibilité sur place"],
+        ["Digital", "Posts et carrousels Instagram, stories Instagram et Facebook", "Notoriété, engagement, rappel avant la séance"],
+        ["Digital", "Newsletter Boxoffice, avec un retour sur la séance précédente", "Fidélisation"],
+      ],
+    },
+    planning: [
+      ["Ven. 9 janv. 2026", "#55 Metropolis"], ["Ven. 13 févr. 2026", "#56 L'Œuf de l'ange"], ["Ven. 27 mars 2026", "#57 Le Garçon et le Héron"],
+      ["Ven. 10 avr. 2026", "#58 Scarlet et l'éternité"], ["Ven. 8 mai 2026", "#59 Look Back, carrousel en collaboration avec Eurozoom"], ["Ven. 12 juin 2026", "#60 Le Dernier Souffle d'un yakuza"],
+      ["Ven. 10 juil. 2026", "#61 Ghost in the Shell"], ["Ven. 11 sept. 2026", "#63 Akira"], ["Ven. 9 oct. 2026", "#64 Memories"], ["Ven. 13 nov. 2026", "#65 Si tu tends l'oreille"],
+      ["10 → 20 nov. 2026", "#66 : devis, BAT validé le 16, livraison des affiches le 20"], ["Ven. 11 déc. 2026", "#66 On Gaku, avec le conservatoire de Chelles"],
+    ],
     etapes: [
-      ["Veille et diagnostic", "Analyse des anciennes affiches et de celles d'autres ciné-clubs."],
+      ["Veille et diagnostic", "Analyse des anciennes affiches et de celles d'autres ciné-clubs, forces et faiblesses du club."],
       ["Nouvelle charte", "Logotype, couleurs, typographies, numéro de séance et étiquette de prix."],
-      ["Série d'affiches", "Une affiche par séance, de #55 à #60, affichée aux arrêts de bus, à la reprographie de la ville, chez les commerçants et à la Bulle de Jeux."],
+      ["Série d'affiches", "Une affiche par séance à partir de la #55, affichée sur les panneaux de la Ville, chez les commerçants et à Bulle de Jeux."],
       ["Déclinaisons", "Cartons de pré-séance flat et scope, écrans du hall, posts, Reels et stories, dont une publication avec Eurozoom."],
+      ["Achat d'impression", "Cahier des charges et comparaison de trois imprimeurs pour la #66."],
       ["Suivi", "Relevé des entrées par séance et des statistiques des publications."],
     ],
     ba: [["img/avant-metropolis.jpg", "img/ja55-metropolis.jpg", "#55 Metropolis"], ["img/avant-oeuf.jpg", "img/ja56-oeuf-bleu.jpg", "#56"], ["img/avant-heron.jpg", "img/ja57-heron.jpg", "#57"]],
     serie: [["img/ja55-metropolis.jpg", "#55"], ["img/ja56-oeuf-bleu.jpg", "#56"], ["img/ja56-oeuf-rouge.jpg", "#56 variante"], ["img/ja57-heron.jpg", "#57"], ["img/ja57-heron-profil.jpg", "#57 variante"], ["img/ja58-scarlet.jpg", "#58"], ["img/ja58-scarlet-rouge.jpg", "#58 variante"], ["img/ja59-lookback.jpg", "#59"], ["img/ja60-yakuza.jpg", "#60"]],
-    bilan: { txt: "Entrées par séance après la refonte. Les entrées de #60 sont à récupérer.", data: [["Séance 1", 3], ["Séance 2", 15], ["Séance 3", 28], ["Séance 4", 21], ["Séance 5", 40]] },
-    annexes: [["Cahier des charges", "Impression des affiches #66"], ["Demandes de devis", "Exaprint, Ma Bonne Impression, L'Atelier 2up"], ["Charte graphique", "Couleurs, typographies, règles d'usage"]] },
-  { id: "baise-en-ville", n: "02", t: "Baise-en-ville", sub: "Stratégie de communication de l'avant-première",
-    a: "Cinéma Étoile Cosmos", periode: "À compléter", cond: "Vécue · projet seul",
-    comp: ["C1", "C2", "C3"],
-    contexte: "Dispositif de communication autour de l'avant-première du film de Martin Jauvat au Cosmos : affiche, déclinaisons digitales et réseaux sociaux.",
-    fiche: [["Annonceur", "Cinéma Étoile Cosmos, Chelles"], ["Partenaire", "Le Pacte (distributeur)"], ["Supports", "Affiche, digital, réseaux sociaux"]],
-    annexes: [["Documents", "À ajouter"]] },
+    budget: {
+      rows: [
+        ["Création graphique", "Interne (moi)", "0 €", "Charte et déclinaisons"],
+        ["3 affiches 120×160 par mois", "Reprographie de la Ville", "Offert", "Prévu par la DSP"],
+        ["Cartons DCP, écrans DOOH, réseaux sociaux", "Interne", "0 €", "Outils du cinéma"],
+        ["6 affiches 120×160 (#66)", "Exaprint", "63,10 € HT", "Dos bleu, papier FSC"],
+        ["30 affiches A3 (#66)", "Exaprint", AF("prix du devis"), ""],
+        ["Location du film", "Distributeur", "Ex. : minimum garanti de 80 € pour la #58", "Selon le film : pourcentage et/ou minimum garanti"],
+      ],
+      presta: {
+        head: ["Critère (poids)", "Exaprint", "Ma Bonne Impression", "L'Atelier 2up"],
+        rows: [["Prix (25 %)", "5", "3", "2"], ["Délai et fiabilité (25 %)", "5", "4", "4"], ["Qualité technique (20 %)", "5", "4", "3"], ["Environnement (15 %)", "3", "2", "4"], ["Service et conseil (15 %)", "3", "3", "5"], ["<strong>Note sur 5</strong>", "<strong>4,40</strong>", "<strong>3,30</strong>", "<strong>3,45</strong>"]],
+        txt: "Prix relevés le 2 novembre 2026 pour des affiches 120×160 en dos bleu. Exaprint : 63,10 € HT les 6, livrées à J+2. Ma Bonne Impression : 76,20 € HT les 5, à J+6. L'Atelier 2up (Noisiel) : sur devis. Je retiens Exaprint, avec L'Atelier 2up en plan B.",
+      },
+    },
+    bilan: { kpi: [["Fréquentation", "Entrées par séance, évolution d'un mois à l'autre"], ["Part des jeunes", "Part des 15-25 ans dans le public"], ["Engagement Instagram", "Likes, commentaires, partages, enregistrements"], ["Portée", "Comptes touchés par les publications du club"], ["Fidélisation", "Spectateurs qui reviennent d'une séance à l'autre"]],
+      data: [["#55 · janv.", 3], ["#56 · févr.", 15], ["#57 · mars", 28], ["#58 · avr.", 21], ["#59 · mai", 40]],
+      txt: "Entrées par séance (source : tableau de suivi des événements du cinéma). De 3 entrées en janvier à 40 en mai 2026, soit 13 fois plus en quatre mois.",
+      extra: AF("entrées des séances #60 à #65 et statistiques Instagram (portée, engagement) avant et après la refonte") },
+    fd: { act: [1, 2, 3, 4, 5], logiciels: "Adobe Illustrator (affiches et déclinaisons), Canva (formats réseaux sociaux), Meta Business Suite (publication et statistiques), Boxoffice (newsletter et site du cinéma)",
+      prods: "Charte graphique du club, affiches 120×160 et A3 (#55 à #66), cartons DCP flat et scope, visuels DOOH, carrousels et stories Instagram, newsletters, cahier des charges d'impression",
+      contrib: "Ce projet couvre les cinq activités du bloc 2 : la veille (cible, concurrence, impression), la création d'une identité et de sa série d'affiches, la production et la diffusion sur des supports print, cinéma, DOOH et digitaux, l'achat d'une prestation d'impression avec un cahier des charges et une grille de choix, et l'évaluation par le suivi des entrées." },
+    annexes: [["Cahier des charges", "Impression des affiches #66 : besoin, veille, comparaison de trois imprimeurs", "https://docs.google.com/document/d/1fsC-kJu7ReCI56jms7sccdAxNkAANvVaRcTE0ijykmk/edit"], ["Présentation « Let's print it ! »", "Sous-traiter l'impression des affiches #66 (PDF)", "https://drive.google.com/file/d/1bQWWL_f-QMz1rPP8qUURJcPs5676Ruas/view"], ["Charte graphique", "Couleurs, typographies, règles d'usage"], ["Statistiques Instagram", "Captures des statistiques des publications"]] },
+
+  { id: "baise-en-ville", n: "02", t: "Baise-en-ville", sub: "Avant-première, sortie et ciné-rencontre avec Martin Jauvat, réalisateur chellois",
+    a: "Cinéma Étoile Cosmos", periode: "Janvier – février 2026", cond: "Vécue · en autonomie · individuelle",
+    comp: ["C1", "C2", "C3", "C5"],
+    contexte: "Baise-en-ville est le deuxième long métrage de Martin Jauvat, réalisateur originaire de Chelles, distribué par Le Pacte. J'ai accompagné le film de A à Z au Cosmos, de la stratégie à la création des contenus et à la présence en salle le jour J. Il fallait créer de l'attente avant la projection, faire vivre le moment pendant, et laisser une trace après.",
+    fiche: [["Annonceur", "Cinéma Étoile Cosmos, Chelles (77)"], ["Partenaire", "Le Pacte (distributeur)"], ["Dates clés", "Avant-première le 14 janvier 2026 · sortie nationale le 28 janvier · ciné-rencontre le 1er février"], ["Supports", "Affiche, vidéo, carton DCP, posts et stories Instagram"]],
+    brief: [
+      ["Contexte", "Le deuxième film d'un réalisateur de Chelles sort en salles : une occasion rare de lier le cinéma de la ville à une actualité nationale."],
+      ["Demande", "Faire de la venue de Martin Jauvat et de son équipe un événement local, remplir la salle à l'avant-première, puis prolonger la vie du film après la sortie avec une ciné-rencontre destinée aux 15-25 ans."],
+      ["Contraintes de contenu", "Utiliser le matériel fourni par Le Pacte (affiche, bande-annonce) et respecter la date de sortie nationale."],
+      ["Contraintes graphiques", AF("charte du film imposée par le distributeur, mentions obligatoires")],
+      ["Budget", AF("budget ou absence de budget, prise en charge par le distributeur")],
+      ["Délais", AF("date de confirmation de l'avant-première et début de la communication")],
+    ],
+    problematique: "Comment transformer la sortie d'un film d'auteur en un événement qui rassemble la ville autour de son réalisateur ?",
+    veille: [["Annonceur et marché", AF("Le Pacte, le premier film de Martin Jauvat (Grand Paris), la place des avant-premières avec équipe dans la fréquentation")], ["Créative", AF("campagnes d'autres salles pour le film, communication du distributeur")]],
+    mood: "Moodboard du film et planche tendances (codes visuels du film, campagnes d'avant-premières) : visuels à ajouter.",
+    strat: {
+      cible: [["Cœur de cible", "Habitants de Chelles, fiers d'un réalisateur de leur ville"], ["Cible jeune", "15-25 ans pour la ciné-rencontre du 1er février, à 5 €"], ["Relais", AF("presse locale, Ville de Chelles, associations")]],
+      objectifs: [["Cognitif", "Faire savoir que le réalisateur vient présenter son film à Chelles"], ["Affectif", "Créer de la fierté locale autour du film"], ["Conatif", "Remplir la salle à l'avant-première et faire revenir le public après la sortie"]],
+      axe: "Avant : créer de l'attente. Pendant : faire vivre un moment. Après : laisser une trace.",
+      ton: AF("ton choisi pour les publications"),
+      moyens: [["Print", "Affiche", "Visibilité au cinéma et en ville"], ["Cinéma", "Carton DCP de pré-séance", "Toucher les spectateurs en salle"], ["Vidéo", "Vidéo", AF("format et diffusion")], ["Digital", "Posts et stories Instagram", "Annoncer, rappeler, puis revenir sur la soirée"]],
+    },
+    planning: [["Mer. 14 janv. 2026, 20h", "Avant-première en présence de Martin Jauvat et de l'équipe du film"], ["Sam. 24 janv.", "Lancement de la communication de la ciné-rencontre sur les réseaux sociaux"], ["Mer. 28 janv.", "Sortie nationale du film"], ["Dim. 1er févr., 16h", "Ciné-rencontre avec Martin Jauvat, tarif jeune à 5 €"]],
+    etapes: [["Stratégie", "Choix de l'axe avant / pendant / après et des supports."], ["Création", "Affiche, vidéo, carton DCP, posts et stories."], ["Jour J", "Présence en salle et contenus pendant la soirée."], ["Après", "Publications de retour sur la soirée et relance pour la ciné-rencontre."]],
+    reals: AF("ajouter les visuels : affiche, carton DCP, posts et stories (fichiers dans img/)"),
+    budget: { rows: [["Création des supports", "Interne (moi)", "0 €", ""], ["Matériel du film", "Le Pacte", AF("coût"), ""], ["Accueil de l'équipe", AF("prestataire"), AF("coût"), ""]] },
+    bilan: { kpi: [["Fréquentation", "Entrées et préventes par séance"], ["Taux de remplissage", "Entrées par rapport à la jauge de la salle"], ["Engagement", "Réactions aux publications sur l'événement"]],
+      data: [["AVP 14/01", 251], ["Sortie 28/01", 32], ["Rencontre 01/02", 199]],
+      txt: "Entrées par séance (source : tableau de suivi des événements du cinéma). Avant-première : 183 préventes, 38 entrées sur place et 30 invitations. Ciné-rencontre : 77 préventes et 122 entrées sur place. Au total, 482 spectateurs sur trois séances.",
+      extra: AF("statistiques des publications et retours du public") },
+    fd: { act: [1, 2, 3, 5], logiciels: AF("logiciels utilisés (ex. Illustrator, Canva, Premiere Pro, CapCut)"),
+      prods: "Affiche, vidéo, carton DCP, posts et stories Instagram",
+      contrib: "Ce projet m'a fait travailler la création de contenus à partir du matériel d'un distributeur, la diffusion d'un dispositif en trois temps (avant, pendant, après) et l'évaluation par les préventes et les entrées." },
+    annexes: [["Échanges avec Le Pacte", "À ajouter"], ["Captures des publications", "À ajouter"]] },
+
   { id: "nuit-horreur", n: "03", t: "La Nuit de l'Horreur", sub: "Marathon horreur du 31 octobre 2026, de 21h à 7h",
-    a: "Cinéma Étoile Cosmos", periode: "Octobre 2026", cond: "Vécue · projet seul",
+    a: "Cinéma Étoile Cosmos", periode: "Septembre – octobre 2026", cond: "Vécue · en autonomie · individuelle",
     comp: ["C1", "C2", "C3", "C4", "C5"],
-    contexte: "Une nuit entière de films d'horreur au Cosmos pour Halloween. J'ai construit la programmation, négocié les droits de diffusion avec les distributeurs et mené la campagne de communication print, digitale et réseaux sociaux.",
-    fiche: [["Annonceur", "Cinéma Étoile Cosmos, Chelles"], ["Date", "31 octobre 2026, 21h – 7h"], ["Partenaires", "Plusieurs distributeurs"], ["Supports", "Print, digital, réseaux sociaux"]],
-    etapes: [["Programmation", "Choix des films de la nuit."], ["Négociation des droits", "Demandes et échanges avec les distributeurs."], ["Campagne", "Affiche, déclinaisons digitales et réseaux sociaux."], ["Bilan", "Fréquentation de la nuit."]],
-    bilan: { txt: "Résultats de fréquentation à compléter." },
-    annexes: [["Échanges distributeurs", "À ajouter"], ["Devis et commandes", "À ajouter"]] },
+    contexte: "Une nuit entière de films d'horreur pour Halloween : cinq films en VOSTFR, de 21h à 7h, avec un petit-déjeuner pour celles et ceux qui tiennent jusqu'au matin. La nuit clôt une journée Halloween complète au Cosmos, après « Mon petit Halloween » le matin et un ciné-déguisement La Famille Addams l'après-midi. J'ai construit la programmation, négocié les droits avec les distributeurs et mené la campagne.",
+    fiche: [["Annonceur", "Cinéma Étoile Cosmos, Chelles (77)"], ["Date", "Samedi 31 octobre 2026, 21h – 7h"], ["Tarif", "Pass nuit à 25 €"], ["Cible", "15-25 ans"], ["Partenaires", "Distributeurs, dont ARP Sélection (Sanguine)"], ["Supports", "Affiche, cartons DCP flat et scope, Reels et posts Instagram, presse"]],
+    brief: [
+      ["Contexte", "Le Cosmos a déjà organisé une Nuit de l'horreur en 2019 (Ghostland, Halloween, Tucker & Dale, avec quiz et concours de costumes) et des après-midis de l'horreur en 2019 et 2024. L'événement revient en 2026 sous la forme d'une nuit complète."],
+      ["Demande", "Programmer et faire connaître une nuit horreur pour les 15-25 ans, et la remplir."],
+      ["Contraintes de contenu", "Films en VOSTFR, droits de diffusion à obtenir auprès de chaque distributeur, horaires tenus sur dix heures."],
+      ["Contraintes graphiques", AF("charte de l'événement")],
+      ["Budget", AF("coût des films (pourcentage, minimum garanti), petit-déjeuner, impression")],
+      ["Délais", AF("date de lancement de la billetterie et de la communication")],
+    ],
+    problematique: "Comment convaincre des 15-25 ans de passer une nuit entière au cinéma ?",
+    veille: [["Historique du cinéma", "Nuit de l'horreur 2019 avec quiz et concours de costumes, après-midis de l'horreur en 2019 et 2024."], ["Créative", AF("marathons horreur d'autres salles, codes visuels du genre")], ["Programmation", AF("films envisagés, disponibilité des droits, conditions des distributeurs")]],
+    mood: "Moodboard de la nuit et planche tendances (affiches de marathons, codes du cinéma d'horreur, formats Reels) : visuels à ajouter.",
+    strat: {
+      cible: [["Cœur de cible", "15-25 ans amateurs de cinéma d'horreur"], ["Cible secondaire", AF("à préciser")]],
+      objectifs: [["Cognitif", "Faire connaître la nuit et sa programmation"], ["Affectif", "Jouer sur le défi : « est-ce que tu tiendras jusqu'au matin ? »"], ["Conatif", "Vendre les pass nuit à 25 €"]],
+      axe: "Une nuit, cinq films, une seule question : est-ce que tu tiendras jusqu'au matin ?",
+      ton: "Complice et joueur, avec de l'humour noir et le tutoiement.",
+      moyens: [["Digital", "Reel 01 « Cris » : montage des bandes-annonces", "Faire découvrir les films"], ["Digital", "Reel 02 « Teaser 15 s » : les heures de la nuit qui défilent", "Lancer le défi"], ["Digital", "Reel 03 « Règles de la nuit »", "Faire interagir (« tague la personne qui… »)"], ["Cinéma", "Cartons DCP flat et scope", "Toucher les spectateurs en salle"], ["Print", "Affiche", "Visibilité au cinéma et en ville"], ["Presse", "Annonce dans la presse locale", AF("titre et date")]],
+    },
+    planning: [["Septembre – octobre 2026", "Programmation et négociation des droits avec les distributeurs"], ["Dim. 25 oct.", "Textes des trois Reels finalisés"], ["Sam. 31 oct., 21h – 7h", "Nuit de l'Horreur"], [AF("date"), "Lancement de la billetterie"]],
+    etapes: [["Programmation", "Choix des cinq films, dont Sanguine et American Nightmare."], ["Négociation des droits", "Demandes et échanges avec les distributeurs, dont ARP Sélection."], ["Campagne", "Affiche, cartons DCP, trois Reels et presse."], ["La nuit", "Accueil, enchaînement des films, petit-déjeuner à l'aube."]],
+    reals: AF("ajouter l'affiche, les cartons DCP et des captures des Reels"),
+    budget: { rows: [["Location des films", "Distributeurs", AF("conditions par film"), ""], ["Petit-déjeuner", AF("fournisseur"), AF("coût"), ""], ["Création des supports", "Interne (moi)", "0 €", ""]] },
+    bilan: { kpi: [["Pass vendus", "Nombre de pass nuit et recette"], ["Tenue de la nuit", "Spectateurs encore présents au dernier film"], ["Engagement", "Vues et partages des trois Reels"]],
+      txt: AF("nombre d'entrées de la nuit, spectateurs présents au petit-déjeuner, vues des Reels") },
+    fd: { act: [1, 2, 3, 4, 5], logiciels: AF("logiciels utilisés"),
+      prods: "Programmation de la nuit, affiche, cartons DCP flat et scope, trois Reels Instagram et leurs textes",
+      contrib: "Ce projet m'a fait négocier des droits de diffusion avec des distributeurs (achat), concevoir une campagne digitale en plusieurs temps et organiser un événement de dix heures." },
+    annexes: [["Échanges avec les distributeurs", "À ajouter"], ["Textes des Reels", "Reels 01, 02 et 03"], ["Bilan de fréquentation", "À ajouter"]] },
 ];
 
 /* ---------- Productions ---------- */
@@ -638,20 +789,48 @@ grid.addEventListener("keydown", e => { const c = e.target.closest(".card"); if 
 modal.addEventListener("click", e => { if (e.target === modal || e.target.closest(".modal__close") || e.target.closest("a")) closeProd(); });
 
 /* page projet */
+const ACT = { 1: "Veille créative et technologique au service de la demande", 2: "Création de contenus et de solutions de communication", 3: "Production et diffusion des solutions de communication", 4: "Achats et relations avec des prestataires", 5: "Contrôle et évaluation des solutions de communication" };
+const tbl = (head, rows) => `<div class="tblw"><table class="tbl"><thead><tr>${head.map(h => `<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+const kv = rows => `<dl class="kv">${rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("")}</dl>`;
 function renderProject(id) {
   const p = PROJ.find(x => x.id === id); if (!p) return false;
   const secs = [];
   const sec = (key, title, body) => { secs.push([key, title]); return `<section class="psec" id="${p.id}-${key}"><div class="psec__t"><span class="num">${String(secs.length).padStart(2, "0")}</span><h3>${title}</h3></div><div class="stack">${body}</div></section>`; };
   const todo = t => `<p class="todo">${t}</p>`;
   const max = p.bilan && p.bilan.data ? Math.max(...p.bilan.data.map(d => d[1])) : 0;
+  const s = p.strat;
   const body =
-    sec("etapes", "Étapes et coulisses", p.etapes ? `<ol class="etapes">${p.etapes.map(([a, b]) => `<li><div><strong>${a}</strong><span class="muted">${b}</span></div></li>`).join("")}</ol>` : todo("Étapes, veille et pistes créatives à compléter.")) +
+    sec("brief", "Brief", (p.brief ? kv(p.brief) : todo("Brief à compléter.")) + (p.problematique ? `<p class="pb"><span class="sublbl">Problématique</span>${p.problematique}</p>` : "")) +
+    sec("veille", "Veille et sources",
+      (p.veille ? kv(p.veille) : todo("Veille à compléter.")) +
+      (p.veilleApport ? `<p class="pb"><span class="sublbl">Ce que la veille a apporté</span>${p.veilleApport}</p>` : "") +
+      `<p class="sublbl" style="margin-top:var(--e2)">Tableau des sources</p>` +
+      (p.sources ? tbl(["Source", "Ce que j'y ai trouvé"], p.sources.map(([n, u, w]) => [`<a href="${u}" target="_blank" rel="noopener">${n}</a>`, w])) : `<p>${AF("tableau des sources : nom, lien, date de consultation, ce que la source a apporté")}</p>`)) +
+    sec("moodboard", "Moodboard et tendances", p.moodImgs ? `<div class="gal">${p.moodImgs.map(([src, l]) => `<figure><img class="zoom" src="${src}" alt="${l}"><figcaption>${l}</figcaption></figure>`).join("")}</div>` : `<p>${AF(p.mood || "moodboard et planche tendances")}</p>`) +
+    sec("strategie", "Stratégie de communication", s ? (
+      `<p class="sublbl">Cibles</p>` + kv(s.cible) +
+      `<p class="sublbl" style="margin-top:var(--e2)">Objectifs</p>` + kv(s.objectifs) +
+      `<p class="pb"><span class="sublbl">Axe</span>${s.axe}</p><p class="pb"><span class="sublbl">Ton</span>${s.ton}</p>` +
+      `<p class="sublbl" style="margin-top:var(--e2)">Stratégie des moyens</p>` + tbl(["Canal", "Support", "Rôle"], s.moyens)) : todo("Stratégie à compléter.")) +
+    sec("planning", "Planning", (p.planning ? tbl(["Date", "Étape"], p.planning) : todo("Planning à compléter.")) +
+      (p.etapes ? `<p class="sublbl" style="margin-top:var(--e2)">Déroulé du projet</p><ol class="etapes">${p.etapes.map(([a, b]) => `<li><div><strong>${a}</strong><span class="muted">${b}</span></div></li>`).join("")}</ol>` : "")) +
     sec("realisations", "Réalisations",
       (p.ba ? `<p class="sublbl">Avant / après</p><div class="ba">${p.ba.map(([a, b, l]) => `<figure><div class="pair"><img class="zoom" src="${a}" alt="${l}, ancienne affiche"><img class="zoom" src="${b}" alt="${l}, nouvelle affiche"></div><figcaption>${l} : avant, puis après la refonte</figcaption></figure>`).join("")}</div>` : "") +
       (p.serie ? `<p class="sublbl" style="margin-top:var(--e2)">La série</p><div class="serie">${p.serie.map(([s, l]) => `<figure><img class="zoom" src="${s}" alt="Affiche ${l}"><figcaption>${l}</figcaption></figure>`).join("")}</div>` : "") +
-      (!p.ba && !p.serie ? todo("Visuels à ajouter.") : "")) +
-    sec("bilan", "Bilan", p.bilan ? (p.bilan.data ? `<div class="bars" role="img" aria-label="Entrées par séance : ${p.bilan.data.map(d => d[1]).join(", ")}">${p.bilan.data.map(([l, v]) => `<div class="bar"><span class="bar__lbl">${l}</span><div class="bar__track"><div class="bar__fill" data-w="${v / max * 100}"></div></div><span class="bar__val" data-v="${v}">${v}</span></div>`).join("")}</div>` : "") + `<p class="muted" style="font-size:16px">${p.bilan.txt}</p>` : todo("Bilan à compléter.")) +
-    sec("annexes", "Annexes", `<div class="annexes">${p.annexes.map(([a, b]) => `<div class="annexe"><span class="annexe__ic" aria-hidden="true">PDF</span><strong>${a}</strong><span class="muted" style="font-size:15px">${b}</span><span class="status">Document à intégrer</span></div>`).join("")}</div>`);
+      (p.reals ? `<p>${p.reals}</p>` : "")) +
+    sec("budget", "Coûts et prestataires", (p.budget ? tbl(["Poste", "Prestataire", "Coût", "Remarque"], p.budget.rows) +
+      (p.budget.presta ? `<p class="sublbl" style="margin-top:var(--e2)">Choix de l'imprimeur</p>` + tbl(p.budget.presta.head, p.budget.presta.rows) + `<p class="muted" style="font-size:16px">${p.budget.presta.txt}</p>` : "") : todo("Budget à compléter."))) +
+    sec("bilan", "Évaluation",
+      (p.bilan && p.bilan.kpi ? `<p class="sublbl">Indicateurs suivis</p>` + tbl(["Indicateur", "Ce qu'on mesure"], p.bilan.kpi) : "") +
+      (p.bilan && p.bilan.data ? `<p class="sublbl" style="margin-top:var(--e2)">Résultats</p><div class="bars" role="img" aria-label="Entrées : ${p.bilan.data.map(d => `${d[0]} ${d[1]}`).join(", ")}">${p.bilan.data.map(([l, v]) => `<div class="bar"><span class="bar__lbl">${l}</span><div class="bar__track"><div class="bar__fill" data-w="${v / max * 100}"></div></div><span class="bar__val" data-v="${v}">${v}</span></div>`).join("")}</div>` : "") +
+      (p.bilan ? `<p class="muted" style="font-size:16px">${p.bilan.txt}</p>` + (p.bilan.extra ? `<p>${p.bilan.extra}</p>` : "") : todo("Bilan à compléter."))) +
+    sec("fiche-descriptive", "Fiche descriptive", p.fd ? (
+      `<p class="sublbl">Activités du bloc 2 concernées</p><div class="acts">${[1, 2, 3, 4, 5].map(k => `<span class="act${p.fd.act.includes(k) ? " on" : ""}"><b>${k}</b>${ACT[k]}</span>`).join("")}</div>` +
+      kv([["Conditions", p.cond], ["Période", p.periode], ["Solutions logicielles", p.fd.logiciels], ["Productions réalisées", p.fd.prods]]) +
+      `<p class="pb"><span class="sublbl">Contribution aux compétences</span>${p.fd.contrib}</p>`) : todo("Fiche descriptive à compléter.")) +
+    sec("annexes", "Annexes", `<div class="annexes">${p.annexes.map(([a, b, href]) => href
+      ? `<a class="annexe" href="${href}" target="_blank" rel="noopener"><span class="annexe__ic" aria-hidden="true">DOC</span><strong>${a}</strong><span class="muted" style="font-size:15px">${b}</span><span class="status">Ouvrir →</span></a>`
+      : `<div class="annexe"><span class="annexe__ic" aria-hidden="true">PDF</span><strong>${a}</strong><span class="muted" style="font-size:15px">${b}</span><span class="status af-s">Document à intégrer</span></div>`).join("")}</div>`);
   document.getElementById("projet").innerHTML = `
     <a class="back" href="#accueil"><span aria-hidden="true">←</span>Retour à l'accueil</a>
     <div class="p-hero">
