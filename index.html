@@ -569,8 +569,8 @@ const PROD = [
     d: "Création d'un logo et de son monogramme (G) pour La Gaîté by Deezer : lettrage à la texture vibrante, forme organique et palette de 5 couleurs nommées (Nuit Rappel, Bleu Frisson, Bleu Vinyle, Cyan Décibel, Blanc Balance), déclinées sur différents fonds.", comp: ["C1", "C2"] },
   { t: "Posts Instagram · concerts de janvier", a: "La Gaîté Lyrique", ctx: "scolaire", img: "img/gaite-post-oklou.jpg", gallery: [["img/gaite-post-miki.jpg", "Post · Miki, sam. 9 janv."], ["img/gaite-post-oklou.jpg", "Post · Oklou, ven. 15 janv."], ["img/gaite-post-myd.jpg", "Post · Myd, sam. 16 janv."], ["img/gaite-teaser-miki.jpg", "Teaser · Miki"], ["img/gaite-teaser-oklou.jpg", "Teaser · Oklou"], ["img/gaite-teaser-myd.jpg", "Teaser · Myd"]], c: "Simulée", team: "Projet seul",
     d: "Série de posts Instagram 4:5 pour annoncer trois dates (Miki, Oklou, Myd) avec la nouvelle identité La Gaîté by Deezer : un teaser photo par artiste, puis un post d'annonce avec le monogramme (G), la date, l'horaire et le lien de billetterie.", comp: ["C2", "C3"] },
-  { t: "Stratégie événementielle et site web", a: "Lollapalooza × Marshall", ctx: "scolaire", c: "Simulée", team: "Projet en équipe",
-    d: "Recommandation et supports pour une opération Lollapalooza × Marshall : print, création d'un site web et contenus réseaux sociaux.", comp: ["C1", "C2", "C3"] },
+  { t: "Stratégie événementielle et site web", a: "Lollapalooza × Marshall", ctx: "scolaire", img: "img/lolla-annonce.jpg", gallery: [["img/lolla-cover.jpg", "Couverture"], ["img/lolla-annonce.jpg", "Visuel d'annonce 16:9"], ["img/lolla-abribus.jpg", "Mise en situation · affichage"], ["img/lolla-affichage.jpg", "Mise en situation · affichage (face)"], ["img/lolla-stories.jpg", "Stories par jour"], ["img/lolla-rising.jpg", "Marshall Rising Stage"], ["img/lolla-scenes.jpg", "Présentation des scènes"], ["img/lolla-prog.jpg", "Programmation complète"], ["img/lolla-vendredi.jpg", "Timetable · vendredi"], ["img/lolla-samedi.jpg", "Timetable · samedi"], ["img/lolla-dimanche.jpg", "Timetable · dimanche"]], link: ["https://readymag.website/u3251480485/6206170/", "Voir le site web (Readymag)"], c: "Simulée", team: "Projet en équipe",
+    d: "Recommandation et supports pour une opération Lollapalooza × Marshall à l'Hippodrome ParisLongchamp : visuel d'annonce et affichage, stories, timetables par jour, programmation complète, présentation des scènes dont la Marshall Rising Stage, et un site web réalisé sur Readymag.", comp: ["C1", "C2", "C3"] },
 ];
 const CTX = [["all", "Tout"], ["entreprise", "Entreprise"], ["scolaire", "Projets scolaires"], ["freelance", "Freelance"], ["perso", "Personnel"]];
 let fCtx = "all", fComp = "all";
@@ -662,6 +662,7 @@ function openProd(i) {
         <p style="font-size:17px">${p.d}</p>
         <dl class="mfacts"><dt>Conditions</dt><dd>${p.c}</dd><dt>Réalisation</dt><dd>${p.team}</dd>${vis.length ? `<dt>Supports</dt><dd>${vis.length} visuel${vis.length > 1 ? "s" : ""} · clic pour agrandir</dd>` : ""}</dl>
         <div class="tags">${p.comp.map(c => `<span class="tag tag--v">${c} ${COMP[c]}</span>`).join("")}</div>
+        ${p.link ? `<a class="btn" href="${p.link[0]}" target="_blank" rel="noopener" style="justify-self:start">${p.link[1]} ↗</a>` : ""}
         ${p.proj ? `<a class="btn" href="#projet-${p.proj}" style="justify-self:start">Voir le projet complet →</a>` : ""}
       </div>
     </div>
