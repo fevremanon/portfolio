@@ -260,7 +260,15 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 a.ccard { text-decoration: none; }
 
 .lb { position: fixed; inset: 0; background: rgba(15,13,19,.92); display: grid; place-items: center; z-index: 70; padding: var(--e2); cursor: zoom-out; animation: fadeIn .25s ease both; }
-.lb img { max-height: 92vh; width: auto; border-radius: 18px; animation: rise .5s var(--spring) both; }
+.lb { grid-template-columns: auto minmax(0, 1fr) auto; gap: 16px; }
+.lb__fig { margin: 0; display: grid; justify-items: center; gap: 10px; cursor: default; }
+.lb img { max-height: 84vh; max-width: 100%; width: auto; border-radius: 18px; }
+.lb__fig figcaption { color: #e4e0ec; font: 700 15px var(--f); }
+.lb__nav, .lb__close { width: 56px; height: 56px; border-radius: 50%; border: 0; background: #fff; color: var(--noir); font: 800 22px var(--f); cursor: pointer; transition: transform .3s var(--spring), background .2s; }
+.lb__nav:hover { background: var(--violet); color: #fff; transform: scale(1.08); }
+.lb__close { position: fixed; top: 20px; right: 20px; width: 48px; height: 48px; font-size: 18px; }
+.lb.solo .lb__nav { visibility: hidden; }
+@media (max-width: 640px) { .lb { grid-template-columns: minmax(0, 1fr); } .lb__nav { position: fixed; bottom: 24px; } .lb__prev { left: 24px; } .lb__next { right: 24px; } }
 
 .view { animation: viewIn .6s var(--soft) both; }
 @keyframes viewIn { from { transform: translateY(18px); } }
@@ -483,7 +491,7 @@ a.ccard { text-decoration: none; }
   </div>
 </footer>
 
-<div class="lb" id="lb" hidden><img id="lb-img" alt=""></div>
+<div class="lb" id="lb" hidden role="dialog" aria-label="Visuel agrandi"><button type="button" class="lb__nav lb__prev" aria-label="Visuel précédent">←</button><figure class="lb__fig"><img id="lb-img" alt=""><figcaption id="lb-cap"></figcaption></figure><button type="button" class="lb__nav lb__next" aria-label="Visuel suivant">→</button><button type="button" class="lb__close" aria-label="Fermer">✕</button></div>
 <div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="m-title"></div>
 
 <script>
@@ -761,13 +769,34 @@ route();
 if (document.fonts) document.fonts.ready.then(() => slidePill(navlist, navlist.querySelector("[aria-current]")));
 
 /* zoom sur les affiches */
-const lb = document.getElementById("lb"), lbi = document.getElementById("lb-img");
+const lb = document.getElementById("lb"), lbi = document.getElementById("lb-img"), lbc = document.getElementById("lb-cap");
+let lbSet = [], lbIdx = 0;
+function lbShow(i) {
+  lbIdx = (i + lbSet.length) % lbSet.length; const im = lbSet[lbIdx];
+  lbi.src = im.src; lbi.alt = im.alt;
+  const cap = im.closest("figure")?.querySelector("figcaption")?.textContent || "";
+  lbc.textContent = (cap ? cap + " · " : "") + (lbSet.length > 1 ? `${lbIdx + 1} / ${lbSet.length}` : "");
+  lb.classList.toggle("solo", lbSet.length < 2);
+}
 document.addEventListener("click", e => {
+  if (e.target.closest(".lb__prev")) { lbShow(lbIdx - 1); return; }
+  if (e.target.closest(".lb__next")) { lbShow(lbIdx + 1); return; }
   const img = e.target.closest(".zoom");
-  if (img) { lbi.src = img.src; lbi.alt = img.alt; lb.hidden = false; }
-  else if (e.target.closest("#lb")) lb.hidden = true;
+  if (img && !e.target.closest("#lb")) {
+    const scope = img.closest(".planche, .modal__box, .psec") || document;
+    lbSet = [...scope.querySelectorAll(".zoom")].filter((x, i, a) => a.findIndex(y => y.src === x.src) === i);
+    lbShow(Math.max(0, lbSet.findIndex(x => x.src === img.src))); lb.hidden = false; return;
+  }
+  if (e.target.closest(".lb__close") || (e.target.closest("#lb") && !e.target.closest(".lb__fig img"))) lb.hidden = true;
 });
-document.addEventListener("keydown", e => { if (e.key === "Escape") { lb.hidden = true; closeProd(); } });
+document.addEventListener("keydown", e => {
+  if (!lb.hidden && e.key === "ArrowLeft") { lbShow(lbIdx - 1); return; }
+  if (!lb.hidden && e.key === "ArrowRight") { lbShow(lbIdx + 1); return; }
+  if (e.key === "Escape") { if (!lb.hidden) { lb.hidden = true; return; } closeProd(); }
+});
+let lbX = null;
+lb.addEventListener("touchstart", e => { lbX = e.touches[0].clientX; }, { passive: true });
+lb.addEventListener("touchend", e => { if (lbX === null) return; const d = e.changedTouches[0].clientX - lbX; if (Math.abs(d) > 50) lbShow(lbIdx + (d < 0 ? 1 : -1)); lbX = null; });
 </script>
 </body>
 </html>
