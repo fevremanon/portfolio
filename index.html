@@ -53,7 +53,7 @@ p { margin: 0; max-width: 65ch; }
 .nav ul { list-style: none; margin: 0; padding: 6px; display: flex; flex-wrap: wrap; gap: 4px; background: var(--carte); border-radius: 999px; position: relative; }
 .nav ul a { position: relative; z-index: 1; display: block; padding: 10px 20px; border-radius: 999px; font: 700 16px var(--f); text-decoration: none; color: var(--noir); transition: color .25s; }
 .nav ul a[aria-current="page"] { color: #fff; }
-.nav__pill { position: absolute; top: 6px; bottom: 6px; left: 0; width: 0; border-radius: 999px; background: var(--noir); transition: left .45s var(--spring), width .45s var(--spring); }
+.nav__pill { position: absolute; top: 6px; bottom: 6px; left: 0; width: 0; border-radius: 999px; background: var(--noir); transition: left .45s var(--spring), width .45s var(--spring), top .3s var(--soft); }
 
 /* boutons */
 .btn { display: inline-flex; align-items: center; gap: 10px; padding: 16px 26px; border-radius: 999px; font: 800 17px var(--f); text-decoration: none; border: 0; cursor: pointer; background: var(--violet); color: #fff; transition: transform .35s var(--spring), box-shadow .3s; }
@@ -86,7 +86,7 @@ p { margin: 0; max-width: 65ch; }
 .pcard:hover { transform: translateY(-8px) scale(1.015); }
 .pcard img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform .8s var(--soft); z-index: -2; }
 .pcard:hover img { transform: scale(1.07); }
-.pcard::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, transparent 40%, rgba(15,13,19,.92)); }
+.pcard::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, transparent 30%, rgba(15,13,19,.75) 58%, rgba(15,13,19,.96)); }
 .pcard--ph { background: var(--violet); }
 .pcard--ph.alt { background: var(--noir); }
 .pcard--ph::after { display: none; }
@@ -213,7 +213,7 @@ figcaption { font-size: 15px; color: var(--gris); font-weight: 600; }
 .tabs { position: relative; display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 6px; border-radius: 999px; background: #fff; margin-bottom: 20px; }
 .tabs button { position: relative; z-index: 1; font: 700 16px var(--f); padding: 10px 20px; border-radius: 999px; border: 0; background: transparent; color: var(--noir); cursor: pointer; transition: color .25s; }
 .tabs button[aria-selected="true"] { color: #fff; }
-.tabs__pill { position: absolute; top: 6px; bottom: 6px; left: 0; width: 0; border-radius: 999px; background: var(--violet); transition: left .45s var(--spring), width .45s var(--spring); }
+.tabs__pill { position: absolute; top: 6px; bottom: 6px; left: 0; width: 0; border-radius: 999px; background: var(--violet); transition: left .45s var(--spring), width .45s var(--spring), top .3s var(--soft); }
 .panel { display: grid; gap: 10px; animation: pop .5s var(--spring) both; }
 .xp { background: #fff; border-radius: var(--r-m); transition: box-shadow .3s; }
 .xp[open] { box-shadow: 0 10px 30px rgba(15,13,19,.08); }
@@ -265,7 +265,10 @@ a.ccard { text-decoration: none; }
   .modal__body { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 640px) {
-  .nav ul a { padding: 8px 12px; font-size: 14px; }
+  .nav ul { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .nav ul::-webkit-scrollbar { display: none; }
+  .nav ul a { padding: 8px 12px; font-size: 14px; white-space: nowrap; }
+  .stackposters { display: none; }
   .xp summary { grid-template-columns: minmax(0, 1fr) 40px; }
   .xp .when { grid-column: 1 / -1; }
   .xp__body { padding-left: 20px; }
@@ -472,21 +475,22 @@ const COMP_LONG = {
 
 /* ---------- Projets (pages complètes) ---------- */
 const PROJ = [
-  { id: "japanim", n: "01", t: "Jap'Anim Club", sub: "Refonte de l'identité et série d'affiches mensuelles",
-    img: "img/ja60-yakuza.jpg", a: "Cinéma Étoile Cosmos", periode: "Février 2025 – en cours", cond: "Vécue · projet seul",
+  { id: "japanim", n: "01", t: "Jap'Anim Club", sub: "Reprise et restructuration du club : programmation et communication",
+    img: "img/ja60-yakuza.jpg", a: "Cinéma Étoile Cosmos", periode: "Octobre 2025 – novembre 2026", cond: "Vécue · en autonomie",
     comp: ["C1", "C2", "C3", "C4", "C5"],
-    contexte: "Le Jap'Anim Club propose chaque mois un film d'animation japonaise au Cosmos. Au départ, les séances attiraient très peu de monde. J'ai repris toute la communication du club pour le rendre reconnaissable d'un mois à l'autre et faire venir un public jeune.",
-    fiche: [["Annonceur", "Cinéma Étoile Cosmos, Chelles"], ["Partenaire", "Eurozoom (distributeur)"], ["Cible", "Fans d'animation japonaise, 15–30 ans"], ["Supports", "Affiches 120×160 et A3, cartons DCP, écrans DOOH, Instagram et Facebook"]],
+    contexte: "Le Jap'Anim Club propose chaque mois un film d'animation japonaise au Cosmos, pour les 15–25 ans. Fin 2025, le club n'avait plus de rythme : séances irrégulières, films choisis sans fil conducteur, communication réduite à Instagram. Après une réflexion lancée en octobre 2025, j'ai repris le club en janvier 2026 : programmation, stratégie de communication et identité visuelle.",
+    fiche: [["Annonceur", "Cinéma Étoile Cosmos, Chelles"], ["Partenaires", "Bulle de Jeux, conservatoire Jacques Higelin"], ["Cible", "15–25 ans"], ["Objectif", "Un rendez-vous mensuel régulier, 30 spectateurs par séance"], ["Supports", "Affiches A3 et 120×160, newsletters, presse locale, Pass Culture, Instagram, cartons DCP"]],
     etapes: [
-      ["Veille et diagnostic", "Analyse des anciennes affiches et de celles d'autres ciné-clubs."],
-      ["Nouvelle charte", "Logotype, couleurs, typographies, numéro de séance et étiquette de prix."],
-      ["Série d'affiches", "Une affiche par séance, de #55 à #60, affichée aux arrêts de bus, à la reprographie de la ville, chez les commerçants et à la Bulle de Jeux."],
-      ["Déclinaisons", "Cartons de pré-séance flat et scope, écrans du hall, posts, Reels et stories, dont une publication avec Eurozoom."],
-      ["Suivi", "Relevé des entrées par séance et des statistiques des publications."],
+      ["Diagnostic", "Octobre 2025 : constat d'un club irrégulier et d'une communication à l'arrêt, réflexion menée avec la chargée du jeune public."],
+      ["Veille", "Communication de trois cinémas (Ciné Saint-Leu, Le Méliès, cinéma Alice Guy) et sorties manga, avec Bulle de Jeux."],
+      ["Programmation", "Une séance chaque 2e vendredi du mois, chaque film choisi en lien avec l'actualité manga."],
+      ["Nouvelle charte", "Une identité plus sobre et repérable, qui accélère la création de chaque support."],
+      ["Diffusion", "Newsletters, actu.fr, Chelles Mag, site du cinéma, Pass Culture, Instagram et affichage sur 6 arrêts de bus."],
+      ["Suivi", "Relevé des entrées par séance et comparaison avec 2024 et 2025."],
     ],
     ba: [["img/avant-metropolis.jpg", "img/ja55-metropolis.jpg", "#55 Metropolis"], ["img/avant-oeuf.jpg", "img/ja56-oeuf-bleu.jpg", "#56"], ["img/avant-heron.jpg", "img/ja57-heron.jpg", "#57"]],
     serie: [["img/ja55-metropolis.jpg", "#55"], ["img/ja56-oeuf-bleu.jpg", "#56"], ["img/ja56-oeuf-rouge.jpg", "#56 variante"], ["img/ja57-heron.jpg", "#57"], ["img/ja57-heron-profil.jpg", "#57 variante"], ["img/ja58-scarlet.jpg", "#58"], ["img/ja58-scarlet-rouge.jpg", "#58 variante"], ["img/ja59-lookback.jpg", "#59"], ["img/ja60-yakuza.jpg", "#60"]],
-    bilan: { txt: "Entrées par séance après la refonte. Les entrées de #60 sont à récupérer.", data: [["Séance 1", 3], ["Séance 2", 15], ["Séance 3", 28], ["Séance 4", 21], ["Séance 5", 40]] },
+    bilan: { txt: "Entrées par séance en 2026 (billetterie) : 11 séances et 220 entrées, contre 6 séances et 95 entrées en 2025.", data: [["#55", 3], ["#56", 15], ["#57", 28], ["#58", 24], ["#59", 40], ["#60", 14], ["#61", 21], ["#62", 10], ["#63", 41], ["#64", 7], ["#65", 17]] },
     annexes: [["Cahier des charges", "Impression des affiches #66"], ["Demandes de devis", "Exaprint, Ma Bonne Impression, L'Atelier 2up"], ["Charte graphique", "Couleurs, typographies, règles d'usage"]] },
   { id: "baise-en-ville", n: "02", t: "Baise-en-ville", sub: "Stratégie de communication de l'avant-première",
     a: "Cinéma Étoile Cosmos", periode: "À compléter", cond: "Vécue · projet seul",
@@ -549,7 +553,8 @@ function slidePill(container, active) {
   const pill = container.querySelector(".nav__pill, .tabs__pill");
   if (!pill || !active) return;
   const c = container.getBoundingClientRect(), a = active.getBoundingClientRect();
-  pill.style.left = `${a.left - c.left}px`; pill.style.width = `${a.width}px`;
+  pill.style.left = `${a.left - c.left + container.scrollLeft}px`; pill.style.width = `${a.width}px`;
+  pill.style.top = `${a.top - c.top}px`; pill.style.height = `${a.height}px`; pill.style.bottom = "auto";
 }
 
 /* accueil : projets */
@@ -711,6 +716,7 @@ function route() {
   let active = null;
   navlist.querySelectorAll("[data-nav]").forEach(a => { if (a.dataset.nav === cur) { a.setAttribute("aria-current", "page"); active = a; } else a.removeAttribute("aria-current"); });
   slidePill(navlist, active);
+  if (active && navlist.scrollWidth > navlist.clientWidth) navlist.scrollLeft = active.offsetLeft - 12;
   if (v === "cv") slidePill(tabsEl, tabsEl.querySelector('[aria-selected="true"]'));
   closeProd();
   window.scrollTo(0, 0);
