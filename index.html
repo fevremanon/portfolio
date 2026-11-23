@@ -140,11 +140,26 @@ p { margin: 0; max-width: 65ch; }
 /* fenêtre production */
 .modal { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: var(--e2); background: rgba(15,13,19,.55); backdrop-filter: blur(8px); animation: fadeIn .3s ease both; }
 @keyframes fadeIn { from { opacity: 0; } }
-.modal__box { width: min(980px, 100%); max-height: 90vh; overflow: auto; background: #fff; border-radius: var(--r-xl); padding: clamp(20px, 3vw, 36px); display: grid; gap: var(--e3); animation: rise .5s var(--spring) both; }
+.modal__box { width: min(1180px, 100%); max-height: 90vh; overflow: auto; background: #fff; border-radius: var(--r-xl); padding: clamp(20px, 3vw, 36px); display: grid; gap: var(--e3); animation: rise .5s var(--spring) both; }
 @keyframes rise { from { transform: translateY(40px) scale(.95); opacity: 0; } }
 .modal__head { display: flex; gap: var(--e2); align-items: start; }
 .modal__close { margin-left: auto; flex: none; width: 48px; height: 48px; border-radius: 50%; border: 0; background: var(--carte); font: 800 18px var(--f); cursor: pointer; transition: transform .35s var(--spring), background .2s; }
 .modal__close:hover { transform: rotate(90deg); background: var(--noir); color: #fff; }
+.mview { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: var(--e3); align-items: start; }
+.planche { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.planche figure { margin: 0; background: var(--carte); border-radius: 16px; padding: 8px; display: grid; gap: 6px; }
+.planche img { width: 100%; height: 210px; object-fit: contain; border-radius: 10px; cursor: zoom-in; transition: transform .45s var(--spring); }
+.planche img:hover { transform: scale(1.03); }
+.planche { align-items: start; }
+.planche figure.land { grid-column: span 2; }
+.planche figure.land img { height: auto; max-height: 230px; }
+.planche figcaption { font: 700 12px var(--f); color: var(--gris); text-align: center; }
+.mview--solo .planche { grid-template-columns: minmax(0, 1fr); }
+.mview--solo .planche img { height: min(60vh, 560px); }
+.minfo { display: grid; gap: var(--e2); position: sticky; top: 0; }
+.mfacts { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0; font-size: 15px; }
+.mfacts dt { font-weight: 800; color: var(--gris); }
+.mfacts dd { margin: 0; }
 .modal__body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: var(--e3); align-items: start; }
 .modal__body img, .modal__body .ph-box { border-radius: var(--r-m); width: 100%; }
 .modal__body > img { cursor: zoom-in; }
@@ -263,6 +278,14 @@ a.ccard { text-decoration: none; }
   .cv__id { position: static; }
   .ba { grid-template-columns: minmax(0, 1fr); }
   .modal__body { grid-template-columns: minmax(0, 1fr); }
+  .mview { grid-template-columns: minmax(0, 1fr); }
+  .planche { grid-auto-flow: column; grid-auto-columns: 72%; grid-template-columns: none; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; }
+  .planche figure { scroll-snap-align: start; }
+  .planche img { height: 300px; }
+  .planche figure.land { grid-column: auto; }
+  .planche figure.land img { height: auto; }
+  .mview--solo .planche { grid-auto-columns: 100%; }
+  .minfo { position: static; }
 }
 @media (max-width: 640px) {
   .nav ul { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
@@ -623,22 +646,26 @@ const modal = document.getElementById("modal");
 let lastFocus = null;
 function openProd(i) {
   const p = PROD[i]; lastFocus = document.activeElement;
+  let vis = p.gallery ? [...p.gallery] : (p.img ? [[p.img, "Visuel"]] : []);
+  if (p.img && !vis.some(v => v[0] === p.img)) vis.unshift([p.img, "Visuel principal"]);
+  const solo = vis.length === 1;
   modal.innerHTML = `<div class="modal__box">
-    <div class="modal__head"><div class="stack" style="gap:8px"><p class="kicker">${p.a}${p.part ? ` · ${p.part}` : ""}</p><h3 id="m-title">${p.t}</h3><div class="tags"><span class="tag">${p.c}</span><span class="tag">${p.team}</span></div></div>
+    <div class="modal__head"><div class="stack" style="gap:8px"><p class="kicker">${p.a}${p.part ? ` · ${p.part}` : ""}</p><h3 id="m-title">${p.t}</h3></div>
       <button type="button" class="modal__close" aria-label="Fermer">✕</button></div>
-    <div class="modal__body">
-      ${p.img ? `<img class="zoom" src="${p.img}" alt="${p.t}">` : `<div class="ph-box"><div class="ph"><div><b>${p.a}</b><span>Visuel à ajouter</span></div></div></div>`}
-      <div class="stack">
-        <p style="font-size:19px">${p.d}</p>
+    <div class="mview${solo ? " mview--solo" : ""}">
+      <div class="planche">${vis.length ? vis.map(([src, l]) => `<figure><img class="zoom" src="${src}" alt="${p.t} : ${l}" onload="if(this.naturalWidth>this.naturalHeight*1.2)this.closest('figure').classList.add('land')"><figcaption>${l}</figcaption></figure>`).join("") : `<div class="ph-box"><div class="ph"><div><b>${p.a}</b><span>Visuel à ajouter</span></div></div></div>`}</div>
+      <div class="minfo">
+        <p style="font-size:17px">${p.d}</p>
+        <dl class="mfacts"><dt>Conditions</dt><dd>${p.c}</dd><dt>Réalisation</dt><dd>${p.team}</dd>${vis.length ? `<dt>Supports</dt><dd>${vis.length} visuel${vis.length > 1 ? "s" : ""} · clic pour agrandir</dd>` : ""}</dl>
         <div class="tags">${p.comp.map(c => `<span class="tag tag--v">${c} ${COMP[c]}</span>`).join("")}</div>
         ${p.proj ? `<a class="btn" href="#projet-${p.proj}" style="justify-self:start">Voir le projet complet →</a>` : ""}
       </div>
     </div>
-    ${p.gallery ? `<div class="stack"><p class="sublbl">Déclinaisons</p><div class="gal">${p.gallery.map(([src, l]) => `<figure><img class="zoom" src="${src}" alt="${p.t} : ${l}"><figcaption>${l}</figcaption></figure>`).join("")}</div></div>` : ""}
     </div>`;
   modal.hidden = false;
   modal.querySelector(".modal__close").focus();
 }
+
 function closeProd() { if (modal.hidden) return; modal.hidden = true; if (lastFocus) lastFocus.focus(); }
 grid.addEventListener("click", e => { const c = e.target.closest(".card"); if (c) openProd(+c.dataset.p); });
 grid.addEventListener("keydown", e => { const c = e.target.closest(".card"); if (c && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openProd(+c.dataset.p); } });
