@@ -153,6 +153,8 @@ p { margin: 0; max-width: 65ch; }
 .planche { align-items: start; }
 .planche figure.land { grid-column: span 2; }
 .planche figure.land img { height: auto; max-height: 230px; }
+.planche figure.vid { grid-column: 1 / -1; }
+.planche .vid iframe { width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: 10px; display: block; }
 .planche figcaption { font: 700 12px var(--f); color: var(--gris); text-align: center; }
 .mview--solo .planche { grid-template-columns: minmax(0, 1fr); }
 .mview--solo .planche img { height: min(60vh, 560px); }
@@ -546,7 +548,7 @@ const PROD = [
     d: "Déclinaison des affiches en cartons de pré-séance flat et scope, projetés en salle, et pour les écrans du hall.", comp: ["C2", "C3"] },
   { t: "Baise-en-ville · ciné-rencontre", a: "Cinéma Étoile Cosmos", ctx: "entreprise", part: "En partenariat avec Le Pacte", img: "img/bev-affiche.jpg", gallery: [["img/bev-affiche.jpg", "Affiche"], ["img/bev-flyer-1.jpg", "Flyer · recto"], ["img/bev-flyer-2.jpg", "Flyer · verso"], ["img/bev-story.jpg", "Story 9×16"], ["img/bev-flat.jpg", "Visuel écran 16×9"]], c: "Vécue", team: "Projet seul",
     d: "Ciné-rencontre du dimanche 1er février 2026, séance Sélection 15-25 de l'AFCAE, en présence du réalisateur Martin Jauvat, ancien caissier du Cosmos. Affiche, flyer recto verso, story et visuel écran : le message met en avant le lien du réalisateur avec Chelles.", comp: ["C1", "C2", "C3"] },
-  { t: "Nuit de l'Horreur · 31 octobre", a: "Cinéma Étoile Cosmos", ctx: "entreprise", part: "Avec plusieurs distributeurs", img: "img/nuit-affiche.jpg", gallery: [["img/nuit-teaser.jpg", "Affiche teaser"], ["img/nuit-affiche.jpg", "Affiche programme"]], c: "Vécue", team: "Design en binôme avec Mathis Vérité",
+  { t: "Nuit de l'Horreur · 31 octobre", a: "Cinéma Étoile Cosmos", ctx: "entreprise", part: "Avec plusieurs distributeurs", img: "img/nuit-affiche.jpg", video: ["IFT-2yBFKpQ", "Bande-annonce"], gallery: [["img/nuit-teaser.jpg", "Affiche teaser"], ["img/nuit-affiche.jpg", "Affiche programme"]], c: "Vécue", team: "Design en binôme avec Mathis Vérité",
     d: "Marathon horreur du samedi 31 octobre 2026, de 21h à 7h : 5 films, pass à 25 €. Programmation, négociation des droits avec les distributeurs et campagne de communication, lancée par une affiche teaser puis l'affiche programme.", comp: ["C1", "C2", "C3", "C4", "C5"] },
   { t: "Ciné-Frisson · cycle de juillet", a: "Cinéma Étoile Cosmos", ctx: "entreprise", img: "img/frisson-cycle.jpg", gallery: [["img/frisson-cycle.jpg", "Affiche du cycle"], ["img/frisson-obsession.jpg", "Affiche de séance · Obsession"]], c: "Vécue", team: "Projet seul",
     d: "Cycle horreur tous les vendredis de juillet 2026 à 20h, en VOSTFR (Obsession, Scream 7, Bring Her Back, Évanouis) : une affiche pour le cycle, déclinée en affiche par séance.", comp: ["C2", "C3"] },
@@ -657,15 +659,15 @@ function openProd(i) {
   const p = PROD[i]; lastFocus = document.activeElement;
   let vis = p.gallery ? [...p.gallery] : (p.img ? [[p.img, "Visuel"]] : []);
   if (p.img && !vis.some(v => v[0] === p.img)) vis.unshift([p.img, "Visuel principal"]);
-  const solo = vis.length === 1;
+  const solo = vis.length === 1 && !p.video;
   modal.innerHTML = `<div class="modal__box">
     <div class="modal__head"><div class="stack" style="gap:8px"><p class="kicker">${p.a}${p.part ? ` · ${p.part}` : ""}</p><h3 id="m-title">${p.t}</h3></div>
       <button type="button" class="modal__close" aria-label="Fermer">✕</button></div>
     <div class="mview${solo ? " mview--solo" : ""}">
-      <div class="planche">${vis.length ? vis.map(([src, l]) => `<figure><img class="zoom" src="${src}" alt="${p.t} : ${l}" onload="if(this.naturalWidth>this.naturalHeight*1.2)this.closest('figure').classList.add('land')"><figcaption>${l}</figcaption></figure>`).join("") : `<div class="ph-box"><div class="ph"><div><b>${p.a}</b><span>Visuel à ajouter</span></div></div></div>`}</div>
+      <div class="planche">${p.video ? `<figure class="vid"><iframe src="https://www.youtube-nocookie.com/embed/${p.video[0]}" title="${p.t} : ${p.video[1]}" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe><figcaption>${p.video[1]} · <a href="https://www.youtube.com/watch?v=${p.video[0]}" target="_blank" rel="noopener">voir sur YouTube ↗</a></figcaption></figure>` : ""}${vis.length ? vis.map(([src, l]) => `<figure><img class="zoom" src="${src}" alt="${p.t} : ${l}" onload="if(this.naturalWidth>this.naturalHeight*1.2)this.closest('figure').classList.add('land')"><figcaption>${l}</figcaption></figure>`).join("") : `<div class="ph-box"><div class="ph"><div><b>${p.a}</b><span>Visuel à ajouter</span></div></div></div>`}</div>
       <div class="minfo">
         <p style="font-size:17px">${p.d}</p>
-        <dl class="mfacts"><dt>Conditions</dt><dd>${p.c}</dd><dt>Réalisation</dt><dd>${p.team}</dd>${vis.length ? `<dt>Supports</dt><dd>${vis.length} visuel${vis.length > 1 ? "s" : ""} · clic pour agrandir</dd>` : ""}</dl>
+        <dl class="mfacts"><dt>Conditions</dt><dd>${p.c}</dd><dt>Réalisation</dt><dd>${p.team}</dd>${vis.length ? `<dt>Supports</dt><dd>${p.video ? "1 vidéo · " : ""}${vis.length} visuel${vis.length > 1 ? "s" : ""} · clic pour agrandir</dd>` : ""}</dl>
         <div class="tags">${p.comp.map(c => `<span class="tag tag--v">${c} ${COMP[c]}</span>`).join("")}</div>
         ${p.link ? `<a class="btn" href="${p.link[0]}" target="_blank" rel="noopener" style="justify-self:start">${p.link[1]} ↗</a>` : ""}
         ${p.proj ? `<a class="btn" href="#projet-${p.proj}" style="justify-self:start">Voir le projet complet →</a>` : ""}
@@ -676,7 +678,7 @@ function openProd(i) {
   modal.querySelector(".modal__close").focus();
 }
 
-function closeProd() { if (modal.hidden) return; modal.hidden = true; if (lastFocus) lastFocus.focus(); }
+function closeProd() { if (modal.hidden) return; modal.querySelectorAll("iframe").forEach(f => f.remove()); modal.hidden = true; if (lastFocus) lastFocus.focus(); }
 grid.addEventListener("click", e => { const c = e.target.closest(".card"); if (c) openProd(+c.dataset.p); });
 grid.addEventListener("keydown", e => { const c = e.target.closest(".card"); if (c && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openProd(+c.dataset.p); } });
 modal.addEventListener("click", e => { if (e.target === modal || e.target.closest(".modal__close") || e.target.closest("a")) closeProd(); });
